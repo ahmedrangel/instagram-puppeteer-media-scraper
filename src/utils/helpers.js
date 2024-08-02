@@ -12,11 +12,12 @@ export const handleBlockedResources = (request) => {
     "ping",
     "media",
     "manifest",
-    "other",
+    "other"
   ];
   if (blockedResources.includes(request.resourceType())) {
     request.abort();
-  } else {
+  }
+  else {
     request.continue();
   }
 };
