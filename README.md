@@ -1,5 +1,5 @@
 # Instagram Puppeteer Media Scraper API
-Scrape instagram post medias with no login required using puppeteer and itty-router.
+Scrape instagram post medias using puppeteer and itty-router.
 
 # Setup
 Clone the repository
