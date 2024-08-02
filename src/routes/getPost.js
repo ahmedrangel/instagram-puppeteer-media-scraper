@@ -1,5 +1,5 @@
 import { json, StatusError } from "itty-router";
-import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper } from "../middleware/scraperHandler.js";
+import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, login } from "../middleware/scraperHandler.js";
 import { getPostId, handleBlockedResources } from "../utils/helpers.js";
 
 export const getPost = async (req, env, ctx) => {
@@ -26,14 +26,13 @@ export const getPost = async (req, env, ctx) => {
     currentPage.on("response", async (response) => {
       const contentType = response.headers()["content-type"];
       if (contentType && contentType.includes("application/json")) {
-        dataResponse = await response.json();
         // Parse JSON
-        setCache(postId, dataResponse);
+        dataResponse = await response.json();
+        if (!dataResponse?.require_login) setCache(postId, dataResponse);
       }
     });
 
     await currentPage.goto(apiURL, { waitUntil: "networkidle0" });
-    console.log(await currentPage.cookies());
     return json(dataResponse);
   }
   catch (error) {
