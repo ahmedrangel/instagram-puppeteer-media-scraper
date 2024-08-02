@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
 import { StatusError } from "itty-router";
-import { executablePath } from "puppeteer";
 
 const minimalArgs = [
   "--autoplay-policy=user-gesture-required",
