@@ -1,0 +1,20 @@
+{
+  "name": "instagram-puppeteer-media-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "lint": "eslint --fix --config .config/eslint.mjs"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^2.6.1",
+    "@whatwg-node/server": "^0.9.46",
+    "cheerio": "1.0.0-rc.12",
+    "eslint": "^9.8.0",
+    "http": "0.0.1-security",
+    "itty-router": "^5.0.17",
+    "node-cache": "^5.1.2",
+    "puppeteer": "^22.15.0"
+  }
+}
