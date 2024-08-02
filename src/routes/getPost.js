@@ -16,9 +16,7 @@ export const getPost = async (req, env, ctx) => {
   try {
     const apiURL = new URL("https://www.instagram.com/graphql/query");
     apiURL.searchParams.set("query_hash", "9f8827793ef34641b2fb195d4d41151c");
-    apiURL.searchParams.set("variables", JSON.stringify({
-      shortcode: postId
-    }));
+    apiURL.searchParams.set("variables", JSON.stringify({ shortcode: postId }));
 
     currentPage = await scraper.browser.newPage();
     await currentPage.setRequestInterception(true);
@@ -28,8 +26,8 @@ export const getPost = async (req, env, ctx) => {
     currentPage.on("response", async (response) => {
       const contentType = response.headers()["content-type"];
       if (contentType && contentType.includes("application/json")) {
+        // Parse JSON response
         dataResponse = await response.json();
-        // Parse JSON
         setCache(postId, dataResponse);
       }
     });
