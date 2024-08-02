@@ -13,10 +13,12 @@ Intsall dependencies
 cd instagram-puppeteer-media-scraper && pnpm i
 ```
 
-Add a `SERVER_PORT` env variable in the .env
+Add your `SERVER_PORT`, `IG_USER`, `IG_PASSWORD` env variable in the .env
 ```sh
-# .env
+# .env example
 SERVER_PORT = "3000"
+IG_USER =
+IG_PASSWORD =
 ```
 
 Running the server
