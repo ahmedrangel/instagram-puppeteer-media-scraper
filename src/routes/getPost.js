@@ -29,6 +29,7 @@ export const getPost = async (req, env, ctx) => {
         // Parse JSON
         dataResponse = await response.json();
         if (!dataResponse?.require_login) setCache(postId, dataResponse);
+        else if (dataResponse?.require_login) await login();
       }
     });
 
