@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
 import { StatusError } from "itty-router";
+import { executablePath } from "puppeteer";
 
 const minimalArgs = [
   "--autoplay-policy=user-gesture-required",
@@ -46,6 +47,10 @@ const browserOptions = {
   defaultViewport: { width: 100, height: 100 },
   args: minimalArgs
 };
+
+if (process.env.PUPPETER_PATH) {
+  browserOptions.executablePath = process.env.PUPPETER_PATH;
+}
 
 const middleware = {};
 if (!middleware.browser) {
