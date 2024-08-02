@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
 import { StatusError } from "itty-router";
+import "dotenv/config";
 
 const minimalArgs = [
   "--autoplay-policy=user-gesture-required",
@@ -47,13 +48,23 @@ const browserOptions = {
   args: minimalArgs
 };
 
-if (process.env.PUPPETER_PATH) {
-  browserOptions.executablePath = process.env.PUPPETER_PATH;
+if (process.env.PUPPETEER_PATH) {
+  browserOptions.executablePath = process.env.PUPPETEER_PATH;
 }
 
 const middleware = {};
 if (!middleware.browser) {
   middleware.browser = await puppeteer.launch(browserOptions);
+  const newPage = await middleware.browser.newPage();
+  await newPage.goto("https://www.instagram.com/accounts/login/", {
+    waitUntil: "networkidle0"
+  });
+
+  newPage.waitForSelector("input[name=\"username\"]"),
+
+  await newPage.type("input[name=\"username\"]", process.env.IG_USER);
+  await newPage.type("input[name=\"password\"]", process.env.IG_PASSWORD);
+  await newPage.click("button[type=\"submit\"]");
 }
 // Initialize dependencies
 middleware.cache = new NodeCache();

@@ -26,13 +26,14 @@ export const getPost = async (req, env, ctx) => {
     currentPage.on("response", async (response) => {
       const contentType = response.headers()["content-type"];
       if (contentType && contentType.includes("application/json")) {
-        // Parse JSON response
         dataResponse = await response.json();
+        // Parse JSON
         setCache(postId, dataResponse);
       }
     });
 
     await currentPage.goto(apiURL, { waitUntil: "networkidle0" });
+    console.log(await currentPage.cookies());
     return json(dataResponse);
   }
   catch (error) {
