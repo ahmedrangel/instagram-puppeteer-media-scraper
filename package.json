@@ -15,5 +15,8 @@
     "itty-router": "^5.0.17",
     "node-cache": "^5.1.2",
     "puppeteer": "^22.15.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
   }
 }
