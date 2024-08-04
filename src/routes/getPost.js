@@ -36,6 +36,7 @@ export const getPost = async (req, env, ctx) => {
     });
 
     await currentPage.goto(apiURL, { waitUntil: "networkidle0" });
+    await currentPage.pdf({path: 'page.pdf', format: 'A4'});
     return json(dataResponse);
   }
   catch (error) {
