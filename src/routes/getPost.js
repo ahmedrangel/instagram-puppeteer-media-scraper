@@ -30,6 +30,8 @@ export const getPost = async (req, env, ctx) => {
         dataResponse = await response.json();
         if (!dataResponse?.require_login) setCache(postId, dataResponse);
         else if (dataResponse?.require_login) await login();
+      } else {
+        dataResponse = { success: false, error: "Invalid response format" }
       }
     });
 
