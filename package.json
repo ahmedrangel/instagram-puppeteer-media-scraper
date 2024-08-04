@@ -10,13 +10,11 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.6.1",
     "@whatwg-node/server": "^0.9.46",
+    "dotenv": "^16.4.5",
     "eslint": "^9.8.0",
     "http": "0.0.1-security",
     "itty-router": "^5.0.17",
     "node-cache": "^5.1.2",
     "puppeteer": "^22.15.0"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5"
   }
 }

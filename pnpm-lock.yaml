@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
     devDependencies:
       '@stylistic/eslint-plugin':
         specifier: ^2.6.1
@@ -18,6 +14,9 @@ importers:
       '@whatwg-node/server':
         specifier: ^0.9.46
         version: 0.9.46
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       eslint:
         specifier: ^9.8.0
         version: 9.8.0
