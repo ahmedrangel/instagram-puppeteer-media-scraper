@@ -1,5 +1,5 @@
 import { json, StatusError } from "itty-router";
-import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, login } from "../middleware/scraperHandler.js";
+import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, login, reLogin } from "../middleware/scraperHandler.js";
 import { getPostId, handleBlockedResources } from "../utils/helpers.js";
 
 export const getPost = async (req, env, ctx) => {
@@ -7,10 +7,14 @@ export const getPost = async (req, env, ctx) => {
   if (!url) throw new StatusError(400, { success: false, error: "url query is required" });
 
   const postId = getPostId(url);
+  console.log("Fetching post: " + postId);
 
   // Check if cached response exists
   const cachedResponse = await isAlreadyProcessed(postId);
-  if (cachedResponse) return json(cachedResponse);
+  if (cachedResponse) {
+    console.log("Using cached response for post: " + postId);
+    return json(cachedResponse);
+  }
 
   let currentPage, dataResponse;
   try {
@@ -28,20 +32,28 @@ export const getPost = async (req, env, ctx) => {
       if (contentType && contentType.includes("application/json")) {
         // Parse JSON
         dataResponse = await response.json();
-        if (!dataResponse?.require_login) setCache(postId, dataResponse);
-        else if (dataResponse?.require_login) await login();
-      } else {
-        dataResponse = { success: false, error: "Invalid response format" }
+        if (!dataResponse?.require_login) {
+          setCache(postId, dataResponse);
+          console.log("Successfully fetched post: " + postId);
+        }
+        else if (dataResponse?.require_login) {
+          await reLogin();
+          throw new StatusError(503, { success: false, error: "An error ocurred. Please try again" });
+          console.log("Failed to fetch post: " + postId);
+        }
+      }
+      else {
+        dataResponse = { success: false, error: "Invalid response format" };
       }
     });
 
     await currentPage.goto(apiURL, { waitUntil: "networkidle0" });
-    await currentPage.pdf({path: 'page.pdf', format: 'A4'});
+    await currentPage.pdf({ path: "post.pdf", format: "A4" });
     return json(dataResponse);
   }
   catch (error) {
     console.error(error);
-    return error(500, { success: false, error: "Internal server error" });
+    return new StatusError(500, { success: false, error: "Internal Server Error" });
   }
   finally {
     removeActivePost(postId);

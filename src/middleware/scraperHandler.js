@@ -44,7 +44,7 @@ const minimalArgs = [
 
 const browserOptions = {
   headless: "new",
-  defaultViewport: { width: 100, height: 100 },
+  defaultViewport: { width: 400, height: 400 },
   args: minimalArgs
 };
 
@@ -54,21 +54,50 @@ if (process.env.PUPPETEER_PATH) {
 
 const middleware = {};
 
+export const launchBrowser = async () => {
+  if (middleware.browser) return;
+  middleware.browser = await puppeteer.launch(browserOptions);
+  console.log("Browser launched");
+};
+
 export const login = async () => {
   const newPage = await middleware.browser.newPage();
+  await newPage.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36");
   await newPage.goto("https://www.instagram.com/accounts/login/", {
     waitUntil: "networkidle0"
   });
+  console.log("Waiting for login page to load...");
   newPage.waitForSelector("input[name=\"username\"]"),
   await newPage.type("input[name=\"username\"]", process.env.IG_USER);
   await newPage.type("input[name=\"password\"]", process.env.IG_PASSWORD);
-  await newPage.click("button[type=\"submit\"]");
+  await Promise.all([
+    newPage.click("button[type=\"submit\"]"),
+    newPage.waitForNavigation({ waitUntil: "networkidle0" })
+  ]);
+  if (newPage.url().includes("/accounts/onetap/") || newPage.url().includes("/challenge")) {
+    try {
+      await Promise.all([
+        newPage.waitForSelector("div[role=\"button\"]", { timeout: 10000 }),
+        newPage.click("div[role=\"button\"]"),
+        newPage.waitForNavigation({ waitUntil: "networkidle0" })
+      ]);
+      console.log("Clicked Not Now or Dismiss button");
+    }
+    catch (error) {
+      console.log("Error clicking Not Now or Dismiss button", error);
+    }
+  }
+  console.log("Successfully logged in");
+  console.log("Current URL: " + newPage.url());
+  await newPage.close();
 };
 
-if (!middleware.browser) {
-  middleware.browser = await puppeteer.launch(browserOptions);
+export const reLogin = async () => {
+  await middleware.browser.close();
+  await launchBrowser();
   await login();
-}
+};
+
 // Initialize dependencies
 middleware.cache = new NodeCache();
 middleware.activePostsId = {};
