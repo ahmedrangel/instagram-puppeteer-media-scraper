@@ -32,17 +32,19 @@ export const getPost = async (req, env, ctx) => {
       if (contentType && contentType.includes("application/json")) {
         // Parse JSON
         dataResponse = await response.json();
+        console.log(dataResponse);
         if (!dataResponse?.require_login) {
           setCache(postId, dataResponse);
           console.log("Successfully fetched post: " + postId);
         }
         else if (dataResponse?.require_login) {
           await reLogin();
-          throw new StatusError(503, { success: false, error: "An error ocurred. Please try again" });
           console.log("Failed to fetch post: " + postId);
+          throw new StatusError(503, { success: false, error: "An error ocurred. Please try again" });
         }
       }
       else {
+        console.log(await response.text());
         dataResponse = { success: false, error: "Invalid response format" };
       }
     });
