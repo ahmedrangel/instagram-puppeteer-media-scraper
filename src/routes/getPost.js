@@ -46,6 +46,7 @@ export const getPost = async (req, env, ctx) => {
       else {
         console.log(await response.text());
         dataResponse = { success: false, error: "Invalid response format" };
+        await reLogin();
       }
     });
 
