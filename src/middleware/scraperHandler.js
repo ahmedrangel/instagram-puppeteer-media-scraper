@@ -94,6 +94,7 @@ export const login = async () => {
 
 export const reLogin = async () => {
   await middleware.browser.close();
+  middleware.browser = null;
   await launchBrowser();
   await login();
 };
