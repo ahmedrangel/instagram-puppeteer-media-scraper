@@ -15,6 +15,6 @@
     "http": "0.0.1-security",
     "itty-router": "^5.0.17",
     "node-cache": "^5.1.2",
-    "puppeteer": "^22.15.0"
+    "puppeteer": "^23.0.1"
   }
 }
