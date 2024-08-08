@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
-import { StatusError } from "itty-router";
 import "dotenv/config";
 
 const minimalArgs = [
@@ -52,7 +51,10 @@ if (process.env.PUPPETEER_PATH) {
   browserOptions.executablePath = process.env.PUPPETEER_PATH;
 }
 
-const middleware = {};
+const middleware = {
+  loggedIn: false,
+  browser: null
+};
 
 export const launchBrowser = async () => {
   if (middleware.browser) return;
@@ -61,6 +63,7 @@ export const launchBrowser = async () => {
 };
 
 export const login = async () => {
+  if (middleware.loggedIn) return;
   const newPage = await middleware.browser.newPage();
   await newPage.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36");
   await newPage.goto("https://www.instagram.com/accounts/login/", {
@@ -82,21 +85,15 @@ export const login = async () => {
         newPage.waitForNavigation({ waitUntil: "networkidle0" })
       ]);
       console.log("Clicked Not Now or Dismiss button");
+      console.log("Successfully logged in");
+      console.log("Current URL: " + newPage.url());
+      middleware.loggedIn = true;
     }
     catch (error) {
       console.log("Error clicking Not Now or Dismiss button", error);
     }
   }
-  console.log("Successfully logged in");
-  console.log("Current URL: " + newPage.url());
   await newPage.close();
-};
-
-export const reLogin = async () => {
-  await middleware.browser.close();
-  middleware.browser = null;
-  await launchBrowser();
-  await login();
 };
 
 // Initialize dependencies
@@ -175,7 +172,7 @@ export const isAlreadyProcessed = async (key, tabId = null) => {
     if (cachedResponse) {
       return cachedResponse;
     }
-    throw new StatusError(408, { success: false, error: "Request timed out, please try again" });
+    throw { status: 408, success: false, error: "Request timed out, please try again" };
   }
 
   return null;

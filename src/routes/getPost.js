@@ -1,13 +1,15 @@
 import { json, StatusError } from "itty-router";
-import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, login, reLogin, launchBrowser } from "../middleware/scraperHandler.js";
+import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, launchBrowser } from "../middleware/scraperHandler.js";
 import { getPostId, handleBlockedResources } from "../utils/helpers.js";
 
 export const getPost = async (req, env, ctx) => {
   const url = req.query?.url;
   if (!url) throw new StatusError(400, { success: false, error: "url query is required" });
 
-  const postId = getPostId(url);
   await launchBrowser();
+  await login();
+
+  const postId = getPostId(url);
   console.log("Fetching post: " + postId);
 
   // Check if cached response exists
@@ -39,15 +41,15 @@ export const getPost = async (req, env, ctx) => {
           console.log("Successfully fetched post: " + postId);
         }
         else if (dataResponse?.require_login) {
-          await reLogin();
           console.log("Failed to fetch post: " + postId);
-          throw new StatusError(503, { success: false, error: "An error ocurred. Please try again" });
+          scraper.loggedIn = false;
+          throw { status: 500, success: false, error: "An error ocurred. Please try again" };
         }
       }
       else {
-        console.log(await response.text());
-        dataResponse = { success: false, error: "Invalid response format" };
-        await reLogin();
+        console.log("Failed to fetch post: " + postId);
+        scraper.loggedIn = false;
+        throw { status: 500, success: false, error: "An error ocurred. Please try again" };
       }
     });
 
@@ -57,7 +59,7 @@ export const getPost = async (req, env, ctx) => {
   }
   catch (error) {
     console.error(error);
-    return new StatusError(500, { success: false, error: "Internal Server Error" });
+    return new StatusError(error?.status || 500, error);
   }
   finally {
     removeActivePost(postId);
