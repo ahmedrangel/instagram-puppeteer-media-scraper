@@ -1,5 +1,5 @@
 import { json, StatusError } from "itty-router";
-import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, launchBrowser } from "../middleware/scraperHandler.js";
+import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, launchBrowser, login } from "../middleware/scraperHandler.js";
 import { getPostId, handleBlockedResources } from "../utils/helpers.js";
 
 export const getPost = async (req, env, ctx) => {
@@ -35,7 +35,7 @@ export const getPost = async (req, env, ctx) => {
       if (contentType && contentType.includes("application/json")) {
         // Parse JSON
         dataResponse = await response.json();
-        console.log(dataResponse);
+        console.log("Require login?: " + dataResponse?.require_login);
         if (!dataResponse?.require_login) {
           setCache(postId, dataResponse);
           console.log("Successfully fetched post: " + postId);
