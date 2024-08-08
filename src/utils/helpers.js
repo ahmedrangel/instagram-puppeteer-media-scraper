@@ -21,3 +21,5 @@ export const handleBlockedResources = (request) => {
     request.continue();
   }
 };
+
+export const maxAge = 86400;

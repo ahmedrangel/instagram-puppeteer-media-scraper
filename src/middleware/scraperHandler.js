@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
+import { maxAge } from "../utils/helpers";
 import "dotenv/config";
 
 const minimalArgs = [
@@ -108,7 +109,7 @@ export const removeActivePost = (tabId) => {
   delete middleware.activePostsId[tabId];
 };
 
-export const setCache = async (key, value, expire = 14400) => {
+export const setCache = async (key, value, expire = maxAge) => {
   try {
     const cachedValue = JSON.stringify(value);
     middleware.cache.set(key, cachedValue, expire);
