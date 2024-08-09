@@ -3,7 +3,7 @@ Scrape instagram post medias using puppeteer and itty-router.
 
 # Setup
 
-Intsall dependencies
+Install dependencies
 ```sh
 pnpm i
 ```
