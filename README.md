@@ -12,8 +12,8 @@ Add your `SERVER_PORT`, `IG_USER`, `IG_PASSWORD` env variable in the .env
 ```sh
 # .env example
 SERVER_PORT = "3000"
-IG_USER =
-IG_PASSWORD =
+IG_USER = "YOUR_USERNAME"
+IG_PASSWORD = "YOUR_PASSWORD"
 ```
 
 Running the server
