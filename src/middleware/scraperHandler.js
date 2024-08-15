@@ -71,13 +71,23 @@ export const login = async () => {
     waitUntil: "networkidle0"
   });
   console.log("Waiting for login page to load...");
-  newPage.waitForSelector("input[name=\"username\"]"),
-  await newPage.type("input[name=\"username\"]", process.env.IG_USER);
-  await newPage.type("input[name=\"password\"]", process.env.IG_PASSWORD);
-  await Promise.all([
-    newPage.click("button[type=\"submit\"]"),
-    newPage.waitForNavigation({ waitUntil: "networkidle0" })
-  ]);
+  try {
+    newPage.waitForSelector("input[name=\"username\"]", { timeout: 5000 }),
+    await newPage.type("input[name=\"username\"]", process.env.IG_USER);
+    await newPage.type("input[name=\"password\"]", process.env.IG_PASSWORD);
+    await Promise.all([
+      newPage.click("button[type=\"submit\"]"),
+      newPage.waitForNavigation({ waitUntil: "networkidle0" })
+    ]);
+  }
+  catch (e) {
+    console.log("Username selector not found, click in Continue as...");
+    await newPage.waitForSelector("button[type=\"button\"]", { timeout: 5000 });
+    await Promise.all([
+      newPage.click("button[type=\"button\"]"),
+      newPage.waitForNavigation({ waitUntil: "networkidle0" })
+    ]);
+  }
   if (newPage.url().includes("/accounts/onetap/") || newPage.url().includes("/challenge")) {
     try {
       await Promise.all([
