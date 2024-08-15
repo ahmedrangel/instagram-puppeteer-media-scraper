@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
-import { maxAge } from "../utils/helpers";
+import { maxAge } from "../utils/helpers.js";
 import "dotenv/config";
 
 const minimalArgs = [
