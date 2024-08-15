@@ -72,7 +72,7 @@ export const login = async () => {
   });
   console.log("Waiting for login page to load...");
   try {
-    newPage.waitForSelector("input[name=\"username\"]", { timeout: 5000 }),
+    await newPage.waitForSelector("input[name=\"username\"]", { timeout: 10000 }),
     await newPage.type("input[name=\"username\"]", process.env.IG_USER);
     await newPage.type("input[name=\"password\"]", process.env.IG_PASSWORD);
     await Promise.all([
@@ -82,8 +82,8 @@ export const login = async () => {
   }
   catch (e) {
     console.log("Username selector not found, click in Continue as...");
-    await newPage.waitForSelector("button[type=\"button\"]", { timeout: 5000 });
     await Promise.all([
+      newPage.waitForSelector("button[type=\"button\"]", { timeout: 10000 }),
       newPage.click("button[type=\"button\"]"),
       newPage.waitForNavigation({ waitUntil: "networkidle0" })
     ]);
