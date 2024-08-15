@@ -8,13 +8,13 @@
     "lint": "eslint --fix --config .config/eslint.mjs"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.6.1",
-    "@whatwg-node/server": "^0.9.46",
+    "@stylistic/eslint-plugin": "^2.6.2",
+    "@whatwg-node/server": "^0.9.47",
     "dotenv": "^16.4.5",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "http": "0.0.1-security",
     "itty-router": "^5.0.17",
     "node-cache": "^5.1.2",
-    "puppeteer": "^23.0.1"
+    "puppeteer": "^23.1.0"
   }
 }
