@@ -82,15 +82,29 @@ export const login = async () => {
   }
   catch (e) {
     console.log("Username selector not found, click in Continue as...");
-    await Promise.all([
-      newPage.waitForSelector("button[type=\"button\"]", { timeout: 10000 }),
-      newPage.click("button[type=\"button\"]"),
-      newPage.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {
-        middleware.loggedIn = false;
-        console.log("Login Failed");
-        throw { status: 500, success: false, error: "Login Failed" };
-      })
-    ]);
+    try {
+      await Promise.all([
+        newPage.waitForSelector("button[type=\"button\"]", { timeout: 10000 }),
+        newPage.click("button[type=\"button\"]"),
+        newPage.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {
+          middleware.loggedIn = false;
+          console.log("Login Failed");
+          throw { status: 500, success: false, error: "Login Failed" };
+        })
+      ]);
+    }
+    catch {
+      console.log("Button not Found, click in div role button");
+      await Promise.all([
+        newPage.waitForSelector("div[role=\"button\"]", { timeout: 10000 }),
+        newPage.click("div[role=\"button\"]"),
+        newPage.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {
+          middleware.loggedIn = false;
+          console.log("Login Failed");
+          throw { status: 500, success: false, error: "Login Failed" };
+        })
+      ]);
+    }
   }
   if (newPage.url().includes("/accounts/onetap/") || newPage.url().includes("/challenge")) {
     try {
