@@ -94,18 +94,13 @@ export const login = async () => {
       ]);
     }
     catch {
-      console.log("Button not Found, click in div role button");
-      await Promise.all([
-        newPage.waitForSelector("div[role=\"button\"]", { timeout: 10000 }),
-        newPage.click("div[role=\"button\"]"),
-        newPage.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {
-          middleware.loggedIn = false;
-          console.log("Login Failed");
-          throw { status: 500, success: false, error: "Login Failed" };
-        })
-      ]);
+      console.log("Button not Found");
+      const html = await newPage.content();
+      console.log(html);
+      console.log(newPage.url());
     }
   }
+
   if (newPage.url().includes("/accounts/onetap/") || newPage.url().includes("/challenge")) {
     try {
       await Promise.all([
