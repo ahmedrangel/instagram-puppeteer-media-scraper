@@ -7,7 +7,12 @@ export const getPost = async (req, env, ctx) => {
   if (!url) throw new StatusError(400, { success: false, error: "url query is required" });
 
   await launchBrowser();
-  await login();
+  try {
+    await login();
+  }
+  catch (error) {
+    return new StatusError(error?.status || 500, error);
+  }
 
   const postId = getPostId(url);
   console.log("Fetching post: " + postId);
