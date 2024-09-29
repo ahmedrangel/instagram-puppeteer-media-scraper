@@ -70,6 +70,7 @@ export const login = async () => {
   await newPage.goto("https://www.instagram.com/accounts/login/", {
     waitUntil: "networkidle0"
   });
+  console.log(newPage.url());
   console.log("Waiting for login page to load...");
   try {
     await newPage.waitForSelector("input[name=\"username\"]", { timeout: 10000 }),
@@ -95,9 +96,6 @@ export const login = async () => {
     }
     catch {
       console.log("Button not Found");
-      const html = await newPage.content();
-      console.log(html);
-      console.log(newPage.url());
     }
   }
 
