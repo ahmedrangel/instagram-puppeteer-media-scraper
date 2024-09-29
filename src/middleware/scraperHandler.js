@@ -85,7 +85,11 @@ export const login = async () => {
     await Promise.all([
       newPage.waitForSelector("button[type=\"button\"]", { timeout: 10000 }),
       newPage.click("button[type=\"button\"]"),
-      newPage.waitForNavigation({ waitUntil: "networkidle0" })
+      newPage.waitForNavigation({ waitUntil: "networkidle0" }).catch(() => {
+        middleware.loggedIn = false;
+        console.log("Login Failed");
+        throw { status: 500, success: false, error: "Login Failed" };
+      })
     ]);
   }
   if (newPage.url().includes("/accounts/onetap/") || newPage.url().includes("/challenge")) {
@@ -101,7 +105,9 @@ export const login = async () => {
       middleware.loggedIn = true;
     }
     catch (error) {
+      middleware.loggedIn = false;
       console.log("Error clicking Not Now or Dismiss button", error);
+      throw { status: 500, success: false, error: "Login Failed" };
     }
   }
   await newPage.close();
