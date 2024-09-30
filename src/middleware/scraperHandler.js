@@ -68,7 +68,7 @@ export const login = async () => {
   if (middleware.loggedIn) return;
   const newPage = await middleware.browser.newPage();
   await newPage.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36");
-  await newPage.goto("https://www.instagram.com/accounts/login/", {
+  await newPage.goto("https://www.instagram.com", {
     waitUntil: "networkidle0"
   });
   console.log(newPage.url());
