@@ -16,5 +16,8 @@
     "itty-router": "^5.0.18",
     "node-cache": "^5.1.2",
     "puppeteer": "^23.4.1"
+  },
+  "dependencies": {
+    "ofetch": "^1.4.0"
   }
 }

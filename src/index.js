@@ -2,6 +2,7 @@ import { AutoRouter, error, cors } from "itty-router";
 import { createServerAdapter } from "@whatwg-node/server";
 import { createServer } from "http";
 import { getPost } from "./routes/getPost.js";
+import { getStory } from "./routes/getStory.js";
 import "dotenv/config";
 import { launchBrowser, login } from "./middleware/scraperHandler.js";
 
@@ -16,6 +17,7 @@ const router = AutoRouter({
 });
 
 router.get("/post?", getPost);
+router.get("/story?", getStory);
 
 const ittyServer = createServerAdapter((req, env, ctx) => router.fetch(req, env, ctx));
 const httpServer = createServer(ittyServer);

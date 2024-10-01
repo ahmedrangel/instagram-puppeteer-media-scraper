@@ -1,20 +1,15 @@
 import { json, StatusError } from "itty-router";
-import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper, launchBrowser, login } from "../middleware/scraperHandler.js";
-import { getPostId, handleBlockedResources } from "../utils/helpers.js";
+import { addActivePost, isAlreadyProcessed, removeActivePost, setCache, scraper } from "../middleware/scraperHandler.js";
+import { getPostId, handleBlockedResources, reLoginAttempt } from "../utils/helpers.js";
 
 export const getPost = async (req, env, ctx) => {
   const url = req.query?.url;
   if (!url) throw new StatusError(400, { success: false, error: "url query is required" });
 
-  await launchBrowser();
-  try {
-    await login();
-  }
-  catch (error) {
-    return new StatusError(error?.status || 500, error);
-  }
+  await reLoginAttempt();
 
   const postId = getPostId(url);
+  if (!postId) throw new StatusError(400, { success: false, error: "Invalid url" });
   console.log("Fetching post: " + postId);
 
   // Check if cached response exists

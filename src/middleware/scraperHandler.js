@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import NodeCache from "node-cache";
-import { maxAge } from "../utils/helpers.js";
+import { maxAge, userAgent } from "../utils/helpers.js";
 import "dotenv/config";
 
 const minimalArgs = [
@@ -67,7 +67,7 @@ export const launchBrowser = async () => {
 export const login = async () => {
   if (middleware.loggedIn) return;
   const newPage = await middleware.browser.newPage();
-  await newPage.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36");
+  await newPage.setUserAgent(userAgent);
   await newPage.goto("https://www.instagram.com", {
     waitUntil: "networkidle0"
   });
