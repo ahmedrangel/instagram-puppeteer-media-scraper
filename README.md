@@ -23,3 +23,4 @@ pnpm start
 
 # API Endpoints
 - `GET /post?url=${POST_URL}`
+- `GET /story?url=${STORY_URL}`
